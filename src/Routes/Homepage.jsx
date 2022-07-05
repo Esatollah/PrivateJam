@@ -30,7 +30,7 @@ const Homepage = () => {
     }
 
     const generateKeyPair = async () => {
-        let seedString = Math.random().toString(36).slice(-8);
+        let seedString = "Jeremy"
         const hash = new Uint8Array(await crypto.subtle.digest('SHA-512', new TextEncoder().encode(seedString))
         ).slice(0, 32);
         return keyPairFromSeed(hash);
@@ -55,7 +55,46 @@ const Homepage = () => {
         }
 
         setIdentities(temp);
+
+        let jim = postreq();
+        jim.then((result) => console.log(result))
+
+
+
     }
+
+    const createConfig = () => {
+        let confIdentities = identities.map(x=>x.publicKey);
+
+        return {
+            name: 'Jam',
+            description: '',
+            speakers: confIdentities,
+            moderators: [confIdentities[0]],
+            access: {
+               lockedIdentities: true,
+               identities: confIdentities
+            }
+    }
+}
+
+
+
+    const postreq = async (x) => {
+        const response = await fetch('https://jam.systems/_/api/v1/rooms/abcdefgh', {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'no-cors', // no-cors, *cors, same-origin
+          
+            headers: {
+              'Content-Type': 'application/json'
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            
+            body: JSON.stringify(createConfig()) // body data type must match "Content-Type" header
+          });
+          return response; // parses JSON response into native JavaScript objects
+        }
+    
 
 
     return (
@@ -63,7 +102,7 @@ const Homepage = () => {
             <div className='bg-white w-full md:max-w-3xl min-h-[100vh] md:min-h-full md:rounded-2xl py-4 border-solid border-gray-300 border-2'>
                 <div className='flex flex-col justify-center items-center'>
                     <div className='flex'>
-                        <h1 className='text-xl  text-black font-semibold py-4'>Create a private Jam room </h1>
+                        <h1 className='text-xl  text-black font-semibold py-4'>Create a private Jam shroom </h1>
                         <img src={jamjpg} className="md:inline ml-auto w-14 h-auto" alt='Jam mascot by @eejitlikeme' title='Jam mascot by @eejitlikeme' />
                     </div>
                     <div className='text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800'
@@ -91,6 +130,8 @@ const Homepage = () => {
                         </div>
                     )
                 })}
+
+                
             </div>
         </div>
     )
