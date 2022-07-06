@@ -30,9 +30,7 @@ const Homepage = () => {
 
     const generateKeyPair = async () => {
         let seedString = randomWords({ exactly: 3, join: "-" });
-        console.log(seedString, seeds)
         setSeeds(prev => [...prev, seedString]);
-        console.log(seeds, "after setSeeds in generateKeyPair")
         const hash = new Uint8Array(await crypto.subtle.digest('SHA-512', new TextEncoder().encode(seedString))
         ).slice(0, 32);
         return keyPairFromSeed(hash);
@@ -68,6 +66,7 @@ const Homepage = () => {
 
     const createConfig = () => {
         let confIdentities = identities.map(x => x.publicKey);
+        console.log(confIdentities)
 
         return {
             name: 'Jam',
