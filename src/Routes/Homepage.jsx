@@ -5,7 +5,6 @@ import { toBase64 } from 'fast-base64/js';
 import jamjpg from '../img/jam.jpg'
 import randomWords from 'random-words';
 
-
 const Homepage = () => {
 
     const [names, setNames] = useState(['']);
@@ -39,12 +38,11 @@ const Homepage = () => {
         return keyPairFromSeed(hash);
     }
 
+
     const handleSubmit = async (e) => {
         //Create Identities
         e.preventDefault()
         setSeeds(prev => []);
-        console.log(seeds)
-        console.log("uppie")
         let temp = []
         for (let i = 0; i < names.length; i++) {
             let keypair = await generateKeyPair()
@@ -64,9 +62,8 @@ const Homepage = () => {
         const roomID = Math.random().toString(36).slice(-8);
         let jim = postreq(roomID);
         jim.then((result) => console.log(result))
-        console.log(seeds)
 
-        setRoomlink(`${window.location.hostname}${window.location.port? (":"+ window.location.port) : ""}/rooms/${roomID}`)
+        setRoomlink(`${window.location.protocol}//${window.location.hostname}${window.location.port ? (":" + window.location.port) : ""}/rooms/${roomID}`)
     }
 
     const createConfig = () => {
@@ -113,16 +110,23 @@ const Homepage = () => {
                         <img src={jamjpg} className="md:inline ml-auto w-14 h-auto"
                             alt='Jam mascot by @eejitlikeme' title='Jam mascot by @eejitlikeme' />
                     </div>
-                    <div className='text-green-700 hover:text-white border border-green-700
-                     hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300
-                      font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-green-500
-                      dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800'
-                        onClick={() => addName()}>
-                        add guest</div>
+
                     <form onSubmit={(e) => handleSubmit(e)} className='flex flex-col justify-center'>
                         {names.map((x, idx) => {
+                            if (idx === 0) {
+                                return (
+                                    <div className='flex py-2 border-solid border-2 rounded px-2 my-2' key={idx}>
+                                        <input className='mx-2 px-1 border-solid border-2 rounded placeholder-gray-400 bg-gray-50 w-48' type='text' value={x}
+                                            onChange={(e) => handleChange(e, idx)} required />
+                                        <div className='hover:cursor-pointer bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded '
+                                            onClick={() => addName()}>
+                                            add guest</div>
+                                    </div>
+                                )
+                            }
+
                             return (
-                                <div className='flex py-2' key={idx}>
+                                <div className='flex py-2 border-2 px-2' key={idx}>
                                     <input className='mx-2 px-1 border-solid border-2 rounded placeholder-gray-400 bg-gray-50 w-48' type='text' value={x}
                                         onChange={(e) => handleChange(e, idx)} required />
                                     <div className='hover:cursor-pointer bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded '
@@ -131,10 +135,12 @@ const Homepage = () => {
                             )
                         })}
 
-                        <input type='submit' value='🌱 Create Room' className='select-none h-12 px-6 text-lg text-black bg-gray-200 rounded-lg focus:shadow-outline active:bg-gray-300' ></input>
+                        <input type='submit' value='🌱 Create Room' className='select-none h-12 px-6 my-4 text-lg text-black bg-gray-200 rounded-lg focus:shadow-outline active:bg-gray-300' ></input>
                     </form>
                 </div>
-                <div>{roomlink}</div>
+                <div>
+                    <a href={roomlink ? roomlink : "/"} target="_blank">{roomlink}</a>
+                </div>
                 {identities && identities.map((x, idx) => {
                     return (
                         <div key={idx}>
