@@ -98,7 +98,7 @@ const Homepage = () => {
 
 
     const postreq = async (x, conf) => {
-        const response = await fetch(`https://jam.systems/_/api/v1/rooms/${x}`, {
+        const response = await fetch(`https://jam.systems/_/pantry/api/v1/rooms/${x}`, {
             method: 'POST',
             mode: 'no-cors',
 
@@ -154,6 +154,7 @@ const Homepage = () => {
                 </div>
                 <div>
                     <a href={roomlink ? roomlink : "/"} target="_blank" rel="noreferrer">{roomlink}</a>
+                
                 </div>
                 {identities && identities.map((x, idx) => {
                     return (

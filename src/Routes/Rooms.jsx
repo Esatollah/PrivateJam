@@ -25,7 +25,7 @@ const Room = () => {
 
 
     return (
-        <div className='flex justify-center md:py-8'>
+        <div className='flex justify-center md:py-2'>
             <div className='bg-white w-full md:max-w-3xl min-h-[100vh] md:min-h-full md:rounded-2xl  border-solid border-gray-300 border-2 '>
                 <div className={submitted ? 'hidden' : 'flex flex-col justify-center items-center my-4'}>
                     <div className='flex'>
@@ -47,9 +47,10 @@ const Room = () => {
                 </div>
                 <div className={submitted? "flex flex-col justify-center items-center my-4" : "hidden"}>
                     {
-                        submitted ? <iframe width='400' height={window.screen.width < 768 ? '800' : '425'} allow="microphone;*" title="Jam" src={`jam.systems/${rid}?debug=yes#${jamHash}`} /> : null
+                        submitted ? <iframe width='400' height={window.screen.width < 768 ? '800' : '500'}
+                        allow="microphone;*" title="Jam" src={`https://jam.systems/${rid}?debug=yes#${jamHash}`} /> : null
                     }
-                    <div className='text-center w-14 my-4 hover:cursor-pointer bg-transparent hover:bg-red-500 text-red-700 text-sm font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded '
+                    <div className='text-center w-14 mt-4 mb-1 hover:cursor-pointer bg-transparent hover:bg-red-500 text-red-700 text-sm font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded '
 
                         onClick={() => { setSubmitted(false) }}>↻</div>
                 </div>
