@@ -38,7 +38,7 @@ const Homepage = () => {
                     lockedIdentities: true,
                     identities: confIdentities
                 },
-                useDisplay: {
+                userDisplay: {
                     names: namesConf
                 }
             }
