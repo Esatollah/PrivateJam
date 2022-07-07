@@ -11,6 +11,10 @@ const Room = () => {
 
     const handleSubmit = () => {
         const jamConfig = {
+            ux: {
+                autoRejoin: true,
+                autoJoin: true
+            },
             keys: {
                 seed: password,
             },
@@ -45,10 +49,10 @@ const Room = () => {
 
 
                 </div>
-                <div className={submitted? "flex flex-col justify-center items-center my-4" : "hidden"}>
+                <div className={submitted ? "flex flex-col justify-center items-center my-4" : "hidden"}>
                     {
                         submitted ? <iframe height={window.screen.width < 768 ? '800' : '500'}
-                        allow="microphone;*" title="Jam" src={`https://jam.systems/${rid}?debug=true#${jamHash}`} /> : null
+                            allow="microphone;*" title="Jam" src={`https://beta.jam.systems/${rid}?debug=true#${jamHash}`} /> : null
                     }
                     <div className='text-center w-14 mt-4 mb-1 hover:cursor-pointer bg-transparent hover:bg-red-500 text-red-700 text-sm font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded '
 

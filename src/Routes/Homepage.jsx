@@ -17,24 +17,39 @@ const Homepage = () => {
     useEffect(() => {
 
         if (didMount) {
-        const roomID = Math.random().toString(36).slice(-8);
-        let confIdentities = identities.map(x => x.publicKey);
-        console.log(identities)
-        console.log(confIdentities)
+            const roomID = Math.random().toString(36).slice(-8);
+            let confIdentities = identities.map(x => x.publicKey);
+            console.log(identities)
+            console.log(confIdentities)
 
-        let conf = {
-            name: 'Jam',
-            description: '',
-            speakers: confIdentities,
-            moderators: [confIdentities[0]],
-            access: {
-                lockedIdentities: true,
-                identities: confIdentities
+
+            let namesConf = {}
+            confIdentities.forEach((pbkey, idx) => {
+                namesConf[pbkey] = names[idx]
+            });
+            console.log(namesConf)
+
+            let conf = {
+                name: 'Jam',
+                description: '',
+                speakers: confIdentities,
+                moderators: [confIdentities[0]],
+                access: {
+                    lockedIdentities: true,
+                    identities: confIdentities
+                },
+                useDisplay: {
+                    names: namesConf
+                }
             }
-        }
- 
-        postreq(roomID, conf);
-        setRoomlink(`${window.location.protocol}//${window.location.hostname}${window.location.port ? (":" + window.location.port) : ""}/rooms/${roomID}`)
+
+            const post = async () => {
+                return postreq(roomID, conf);
+            }
+            const result = post()
+            console.log(result)
+
+            setRoomlink(`${window.location.protocol}//${window.location.hostname}${window.location.port ? (":" + window.location.port) : ""}/rooms/${roomID}`)
         } else {
         }
 
@@ -98,9 +113,9 @@ const Homepage = () => {
 
 
     const postreq = async (x, conf) => {
-        const response = await fetch(`https://jam.systems/_/pantry/api/v1/rooms/${x}`, {
+        const response = await fetch(`https://beta.jam.systems/_/pantry/api/v1/rooms/${x}`, {
             method: 'POST',
-            mode: 'no-cors',
+            mode: 'cors',
 
             headers: {
                 'Content-Type': 'application/json'
@@ -154,7 +169,7 @@ const Homepage = () => {
                 </div>
                 <div>
                     <a href={roomlink ? roomlink : "/"} target="_blank" rel="noreferrer">{roomlink}</a>
-                
+
                 </div>
                 {identities && identities.map((x, idx) => {
                     return (
