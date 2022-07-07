@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { keyPairFromSeed } from 'watsign';
 import { toUrl } from 'fast-base64/url'
 import { toBase64 } from 'fast-base64/js';
@@ -11,15 +11,48 @@ const Homepage = () => {
     const [identities, setIdentities] = useState([]);
     const [seeds, setSeeds] = useState([]);
     const [roomlink, setRoomlink] = useState("")
+    const [didMount, setDidMount] = useState(false)
+
+
+    useEffect(() => {
+
+        if (didMount) {
+        const roomID = Math.random().toString(36).slice(-8);
+        let confIdentities = identities.map(x => x.publicKey);
+        console.log(identities)
+        console.log(confIdentities)
+
+        let conf = {
+            name: 'Jam',
+            description: '',
+            speakers: confIdentities,
+            moderators: [confIdentities[0]],
+            access: {
+                lockedIdentities: true,
+                identities: confIdentities
+            }
+        }
+ 
+        postreq(roomID, conf);
+        setRoomlink(`${window.location.protocol}//${window.location.hostname}${window.location.port ? (":" + window.location.port) : ""}/rooms/${roomID}`)
+        } else {
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [identities])
 
     const addName = () => {
         setNames([...names, ''])
     }
 
     const handleChange = (e, idx) => {
-        let temp = [...names];
-        temp[idx] = e.target.value;
-        setNames(temp)
+
+        setNames(prev => {
+            let temp = [...prev]
+            temp[idx] = e.target.value;
+            return temp;
+        })
+
     }
 
     const handleDelete = (e, idx) => {
@@ -40,7 +73,8 @@ const Homepage = () => {
     const handleSubmit = async (e) => {
         //Create Identities
         e.preventDefault()
-        setSeeds(prev => []);
+        setDidMount(true)
+        setSeeds([]);
         let temp = []
         for (let i = 0; i < names.length; i++) {
             let keypair = await generateKeyPair()
@@ -57,32 +91,13 @@ const Homepage = () => {
 
         setIdentities(temp);
 
-        const roomID = Math.random().toString(36).slice(-8);
-        let jim = postreq(roomID);
-        jim.then((result) => console.log(result))
-
-        setRoomlink(`${window.location.protocol}//${window.location.hostname}${window.location.port ? (":" + window.location.port) : ""}/rooms/${roomID}`)
-    }
-
-    const createConfig = () => {
-        let confIdentities = identities.map(x => x.publicKey);
-        console.log(confIdentities)
-
-        return {
-            name: 'Jam',
-            description: '',
-            speakers: confIdentities,
-            moderators: [confIdentities[0]],
-            access: {
-                lockedIdentities: true,
-                identities: confIdentities
-            }
-        }
     }
 
 
 
-    const postreq = async (x) => {
+
+
+    const postreq = async (x, conf) => {
         const response = await fetch(`https://jam.systems/_/api/v1/rooms/${x}`, {
             method: 'POST',
             mode: 'no-cors',
@@ -91,7 +106,7 @@ const Homepage = () => {
                 'Content-Type': 'application/json'
             },
 
-            body: JSON.stringify(createConfig())
+            body: JSON.stringify(conf)
         });
         return response;
     }
@@ -138,7 +153,7 @@ const Homepage = () => {
                     </form>
                 </div>
                 <div>
-                    <a href={roomlink ? roomlink : "/"} target="_blank">{roomlink}</a>
+                    <a href={roomlink ? roomlink : "/"} target="_blank" rel="noreferrer">{roomlink}</a>
                 </div>
                 {identities && identities.map((x, idx) => {
                     return (
