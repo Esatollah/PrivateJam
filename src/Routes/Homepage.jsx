@@ -4,7 +4,7 @@ import { toUrl } from 'fast-base64/url'
 import { toBase64 } from 'fast-base64/js';
 import jamjpg from '../img/jam.jpg'
 import randomWords from 'random-words';
-
+import { DocumentDuplicateIcon, ShareIcon } from '@heroicons/react/solid'
 const Homepage = () => {
 
     const [names, setNames] = useState(['']);
@@ -108,6 +108,22 @@ const Homepage = () => {
 
     }
 
+    const copytoClipboard = (x) => {
+        navigator.clipboard.writeText(x)
+
+    }
+
+    const handleShare = (x) => {
+            try {
+                navigator.share({
+                    text: `Here's your code the private Jam session: ${x}`,
+                    url: roomlink
+                })
+            } catch (error) {
+                console.error(error)
+            }
+    }
+
 
 
 
@@ -133,6 +149,7 @@ const Homepage = () => {
             <div className='bg-white w-full md:max-w-3xl min-h-[100vh] md:min-h-full md:rounded-2xl py-4 border-solid border-gray-300 border-2 flex flex-col items-center'>
                 <div className='flex flex-col justify-center items-center'>
                     <div className='flex'>
+
                         <h1 className='text-xl  text-black font-semibold py-4'>
                             Create a private Jam shroom
                         </h1>
@@ -167,16 +184,31 @@ const Homepage = () => {
                         <input type='submit' value='🌱 Create Room' className='select-none h-12 px-6 my-4 text-lg text-black bg-gray-200 rounded-lg focus:shadow-outline active:bg-gray-300' ></input>
                     </form>
                 </div>
-                <div className={didMount ? 'flex flex-col items-center align-middle bg-[#faf5ef] py-2 w-4/5 rounded-2xl' : 'hidden'}>
 
+                <div className={didMount ? 'flex flex-col items-center align-middle bg-[#faf5ef] py-2 w-4/5 rounded-2xl' : 'hidden'}>
                     <h1 className='text-2xl font-bold mt-0 mb-2'>Guest List</h1>
-                    <a href={roomlink ? roomlink : "/"} target="_blank" rel="noreferrer">{roomlink}</a>
-                    <div className='w-2/5' >
+                    <div className='flex'>
+
+                        <a href={roomlink ? roomlink : "/"} target="_blank" rel="noreferrer">{roomlink}</a>
+                        <div className='mr-[10%]'>
+                            <DocumentDuplicateIcon className='h-5 ' onClick={() => copytoClipboard(roomlink)} />
+                        </div>
+                    </div>
+
+                    <div className='w-full flex-col justify-center justify-items-center items-center' >
                         {identities && identities.map((x, idx) => {
                             return (
-                                <div className='text-center border-2 border-spacing-1 my-1' key={idx}>
-                                    {/* navigator.clipboard.writeText */}
-                                    {x.info.name} <br />{seeds[idx]}
+                                <div className='flex justify-self-center items-center ml-[25%]'>
+                                    <div className='text-center border-2 border-spacing-1 my-1 self-center p-2' key={idx}>
+                                        {x.info.name} <br />{seeds[idx]}
+                                    </div>
+
+                                    <div className='flex ml-auto mr-[25%] space-x-2'>
+                                        <ShareIcon className='h-5' onClick={() => {handleShare(seeds[idx])}}/>
+                                        <DocumentDuplicateIcon className='h-5' onClick={() => copytoClipboard(seeds[idx])} />
+                                    </div>
+
+
                                 </div>
                             )
                         })}
