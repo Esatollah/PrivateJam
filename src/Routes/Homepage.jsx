@@ -190,7 +190,7 @@ const Homepage = () => {
                     <div className='flex'>
 
                         <a href={roomlink ? roomlink : "/"} target="_blank" rel="noreferrer">{roomlink}</a>
-                        <div className='mr-[10%]'>
+                        <div className='mr-[10%] ml-auto'>
                             <DocumentDuplicateIcon className='h-5 ' onClick={() => copytoClipboard(roomlink)} />
                         </div>
                     </div>
