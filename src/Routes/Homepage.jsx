@@ -4,7 +4,7 @@ import { toUrl } from 'fast-base64/url'
 import { toBase64 } from 'fast-base64/js';
 import jamjpg from '../img/jam.jpg'
 import randomWords from 'random-words';
-import { DocumentDuplicateIcon, ShareIcon } from '@heroicons/react/solid'
+import { ShareIcon , DocumentDuplicateIcon} from '@heroicons/react/outline'
 const Homepage = () => {
 
     const [names, setNames] = useState(['']);
@@ -163,7 +163,7 @@ const Homepage = () => {
                                 return (
                                     <div className='flex py-2 border-solid border-2 rounded px-2 my-2' key={idx}>
                                         <input className='mx-2 px-1 border-solid border-2 rounded placeholder-gray-400 bg-gray-50 w-48' type='text' value={x}
-                                            onChange={(e) => handleChange(e, idx)} required placeholder="Creator Name" />
+                                            onChange={(e) => handleChange(e, idx)} required placeholder="Creator Name" maxLength={12}/>
                                         <div className='hover:cursor-pointer bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded '
                                             onClick={() => addName()}>
                                             add guest</div>
@@ -174,7 +174,7 @@ const Homepage = () => {
                             return (
                                 <div className='flex py-2 border-2 px-2' key={idx}>
                                     <input className='mx-2 px-1 border-solid border-2 rounded placeholder-gray-400 bg-gray-50 w-48' type='text' value={x}
-                                        onChange={(e) => handleChange(e, idx)} required />
+                                        onChange={(e) => handleChange(e, idx)} required maxLength={12} />
                                     <div className='hover:cursor-pointer bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded '
                                         onClick={(e) => { handleDelete(e, idx) }}>-</div>
                                 </div>
