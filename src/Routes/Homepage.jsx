@@ -116,7 +116,7 @@ const Homepage = () => {
     const handleShare = (x) => {
             try {
                 navigator.share({
-                    text: `Here's your code the private Jam session: ${x}`,
+                    text: `Here's your code to the private Jam session: ${x}`,
                     url: roomlink
                 })
             } catch (error) {
