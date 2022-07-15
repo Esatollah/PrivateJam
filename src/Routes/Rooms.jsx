@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import jamjpg from '../img/jam.jpg'
+import { PencilAltIcon } from '@heroicons/react/outline'
+
 const Room = () => {
     const { rid } = useParams();
     const [submitted, setSubmitted] = useState(false);
@@ -9,7 +11,9 @@ const Room = () => {
 
 
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
         const jamConfig = {
             ux: {
                 autoRejoin: true,
@@ -39,16 +43,17 @@ const Room = () => {
                         <img src={jamjpg} className="md:inline ml-auto w-14 h-auto"
                             alt='Jam mascot by @eejitlikeme' title='Jam mascot by @eejitlikeme' />
                     </div>
+                        <div className='flex items-center justify-center'>
 
-                    <input className='mx-2 px-1 border-solid border-2 rounded placeholder-gray-400 bg-gray-50 w-48 py-2 mb-2' type='text' value={password}
-                        onChange={(e) => setPassword(e.target.value)} required />
-                    <input type='submit' value='🌱 Join Room' className='select-none h-12 px-6 text-lg text-black
-                bg-gray-200 rounded-lg focus:shadow-outline active:bg-gray-300 hover:cursor-pointer' onClick={() => handleSubmit()} />
-                    <div className="my-4"></div>
-
-
-
+                    <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col">
+                            <input className='mx-2 px-1 border-solid border-2 rounded placeholder-gray-400 bg-gray-50 w-48 py-2 mb-2' type='text' value={password}
+                                onChange={(e) => setPassword(e.target.value)} required />
+                        <input type='submit' value='🌱 Join Room' className='select-none h-12 px-6 text-lg text-black
+                bg-gray-200 rounded-lg focus:shadow-outline active:bg-gray-300 hover:cursor-pointer'  />
+                    </form>
+                        </div>
                 </div>
+
                 <div className={submitted ? "flex flex-col justify-center items-center my-4 w-full" : "hidden"}>
                     {
                         submitted ? <iframe height={window.screen.width < 768 ? '800' : '500'} width="80%"

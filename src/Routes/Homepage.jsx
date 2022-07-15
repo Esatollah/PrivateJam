@@ -4,7 +4,7 @@ import { toUrl } from 'fast-base64/url'
 import { toBase64 } from 'fast-base64/js';
 import jamjpg from '../img/jam.jpg'
 import randomWords from 'random-words';
-import { ShareIcon, DocumentDuplicateIcon, ClipboardCopyIcon, ClipboardCheckIcon } from '@heroicons/react/outline'
+import { ShareIcon, ClipboardCopyIcon, ClipboardCheckIcon } from '@heroicons/react/outline'
 const Homepage = () => {
 
     const [names, setNames] = useState(['']);
@@ -13,6 +13,15 @@ const Homepage = () => {
     const [roomlink, setRoomlink] = useState("")
     const [didMount, setDidMount] = useState(false)
     const [copied, setCopied] = useState([]);
+    // const [shareable, setShareable] = useState(false)
+
+    let shareable = false
+    useEffect(() => {
+        if (navigator.canShare) {
+            // setShareable(true);
+            shareable = true;
+        }
+    }, [])
 
     useEffect(() => {
 
@@ -82,7 +91,6 @@ const Homepage = () => {
         ).slice(0, 32);
         return keyPairFromSeed(hash);
     }
-
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -154,12 +162,13 @@ const Homepage = () => {
 
     return (
         <div className='flex justify-center md:py-8'>
-            <div className='bg-white w-full md:max-w-3xl min-h-[100vh] md:min-h-full md:rounded-2xl py-4 border-solid border-gray-300 border-2 flex flex-col items-center'>
+            <div className='bg-white w-full md:max-w-3xl min-h-[100vh] md:min-h-full md:rounded-2xl py-4 border-solid
+             border-gray-300 border-2 flex flex-col items-center'>
                 <div className='flex flex-col justify-center items-center pb-4'>
                     <div className='flex'>
 
                         <h1 className='text-xl  text-black font-semibold py-4'>
-                            Create a private Jam shroom
+                            Create a private Jam room
                         </h1>
                         <img src={jamjpg} className="md:inline ml-auto w-14 h-auto"
                             alt='Jam mascot by @eejitlikeme' title='Jam mascot by @eejitlikeme' />
@@ -173,7 +182,7 @@ const Homepage = () => {
                                 return (
                                     <div className='flex py-2 border-2 px-2 my-2 w-full' key={idx}>
                                         <input className='mx-2 px-1 border-solid border-2 rounded placeholder-gray-400 bg-gray-50 w-48 h-8' type='text' value={x}
-                                            onChange={(e) => handleChange(e, idx)} required placeholder="Creator Name" maxLength={12} />
+                                            onChange={(e) => handleChange(e, idx)} required placeholder="Moderator" maxLength={12} />
                                     </div>
                                 )
                             }
@@ -182,43 +191,55 @@ const Homepage = () => {
                                 <div className='flex py-2 border-2 px-2' key={idx}>
                                     <input className='mx-2 px-1 border-solid border-2 rounded placeholder-gray-400 bg-gray-50 w-48 ' type='text' value={x}
                                         onChange={(e) => handleChange(e, idx)} required maxLength={12} />
-                                    <div className='hover:cursor-pointer bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 active:bg-red-700 hover:border-transparent rounded '
+                                    <div className='hover:cursor-pointer bg-transparent hover:bg-red-500 text-red-700 font-semibold
+                                     hover:text-white py-2 px-4 border border-red-500 active:bg-red-700 hover:border-transparent rounded '
                                         onClick={(e) => { handleDelete(e, idx) }}>-</div>
                                 </div>
                             )
                         })}
                         <div className='my-1' />
-                        <div className='hover:cursor-pointer bg-transparent hover:bg-green-500 text-green-700 font-semibold active:bg-green-700 hover:text-white py-2 px-4 border
-                                         border-green-500 hover:border-transparent rounded w-3/5 text-center'
+                        <div className='hover:cursor-pointer bg-transparent hover:bg-green-500 text-green-700 font-semibold active:bg-green-700 hover:text-white 
+                                        py-2 px-2 border border-green-500 hover:border-transparent rounded w-3/5 text-center'
                             onClick={() => addName()} unselectable="on" >
                             add guest</div>
                     </form>
                 </div>
 
-                <div className={didMount ? 'flex flex-col items-center align-middle bg-[#faf5ef] py-2 w-4/5 rounded-2xl' : 'hidden'}>
+                <div className={didMount ?
+                    'flex flex-col items-center align-middle bg-[#faf5ef] py-2 w-4/5 rounded-2xl'
+                    : 'hidden'}>
                     <h1 className='text-2xl font-bold mt-0 mb-2'>Guest List</h1>
-                    <div className='flex'>
-
-                        <a href={roomlink ? roomlink : "/"} target="_blank" rel="noreferrer">{roomlink}</a>
-                        <div className='mr-[10%] ml-auto'>
-                            <DocumentDuplicateIcon className='h-5 ' onClick={() => copytoClipboard(roomlink)} />
-                        </div>
+                    <div className='flex flex-col justify-center bg-[#faf5ef] brightness-95 text-center pt-2 pb-4 px-4 rounded'>
+                        <h3 className='text-xl'>Room Link:</h3>
+                        <div className='my-1'/>
+                        <a href={roomlink ? roomlink : "/"} target="_blank" rel="noreferrer" className='border-b-2'>{roomlink}</a>
                     </div>
+
+                    <div className='my-2'/>
 
                     <div className='w-full flex-col justify-center justify-items-center items-center' >
                         {identities && identities.map((x, idx) => {
                             return (
                                 <div className='flex justify-self-center items-center ml-[25%]' key={idx}>
                                     <div className='text-center border-2 border-spacing-1 my-1 self-center p-2' >
-                                        {x.info.name} <br />{seeds[idx]}
+                                        {x.info.name} <br />
+                                        {seeds[idx]}
                                     </div>
 
                                     <div className='flex ml-auto mr-[25%] space-x-2'>
-                                        <ShareIcon className='h-6 hover:cursor-pointer hover:border-2 border-black active:bg-gray-400 rounded' onClick={() => { handleShare(seeds[idx]) }} />
-                                        {copied[idx] ?
-                                            <ClipboardCheckIcon className='h-6 hover:cursor-pointer hover:border-2 border-black active:bg-gray-400 rounded' onClick={() => navigator.clipboard.writeText(seeds[idx])} />
+                                        {shareable ?
+                                            <ShareIcon className='h-6 hover:cursor-pointer hover:border-2 border-black active:bg-gray-400 rounded'
+                                                onClick={() => { handleShare(seeds[idx]) }} />
                                             :
-                                        <ClipboardCopyIcon className='h-6 hover:cursor-pointer hover:border-2 border-black active:bg-gray-400 rounded' onClick={() => copytoClipboard(seeds[idx], idx)} />
+                                            null
+                                        }
+
+                                        {copied[idx] ?
+                                            <ClipboardCheckIcon className='h-6 hover:cursor-pointer hover:border-2 border-black active:bg-gray-400 rounded'
+                                                onClick={() => navigator.clipboard.writeText(seeds[idx])} />
+                                            :
+                                            <ClipboardCopyIcon className='h-6 hover:cursor-pointer hover:border-2 border-black active:bg-gray-400 rounded'
+                                                onClick={() => copytoClipboard(seeds[idx], idx)} />
                                         }
                                     </div>
 
