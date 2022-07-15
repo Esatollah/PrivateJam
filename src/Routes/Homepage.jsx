@@ -13,13 +13,11 @@ const Homepage = () => {
     const [roomlink, setRoomlink] = useState("")
     const [didMount, setDidMount] = useState(false)
     const [copied, setCopied] = useState([]);
-    // const [shareable, setShareable] = useState(false)
+    const [shareable, setShareable] = useState(false)
 
-    let shareable = false
     useEffect(() => {
         if (navigator.canShare) {
-            // setShareable(true);
-            shareable = true;
+            setShareable(true);
         }
     }, [])
 
