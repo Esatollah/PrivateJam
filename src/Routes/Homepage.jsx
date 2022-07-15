@@ -4,7 +4,7 @@ import { toUrl } from 'fast-base64/url'
 import { toBase64 } from 'fast-base64/js';
 import jamjpg from '../img/jam.jpg'
 import randomWords from 'random-words';
-import { ShareIcon, DocumentDuplicateIcon } from '@heroicons/react/outline'
+import { ShareIcon, DocumentDuplicateIcon, ClipboardCopyIcon, ClipboardCheckIcon } from '@heroicons/react/outline'
 const Homepage = () => {
 
     const [names, setNames] = useState(['']);
@@ -12,7 +12,7 @@ const Homepage = () => {
     const [seeds, setSeeds] = useState([]);
     const [roomlink, setRoomlink] = useState("")
     const [didMount, setDidMount] = useState(false)
-
+    const [copied, setCopied] = useState([]);
 
     useEffect(() => {
 
@@ -46,8 +46,7 @@ const Homepage = () => {
             const post = async () => {
                 return postreq(roomID, conf);
             }
-            const result = post()
-            console.log(result)
+            post()
 
             setRoomlink(`${window.location.protocol}//${window.location.hostname}${window.location.port ? (":" + window.location.port) : ""}/rooms/${roomID}`)
         } else {
@@ -86,7 +85,6 @@ const Homepage = () => {
 
 
     const handleSubmit = async (e) => {
-        //Create Identities
         e.preventDefault()
         setDidMount(true)
         setSeeds([]);
@@ -102,15 +100,29 @@ const Homepage = () => {
                     id: publicKey
                 }
             })
-        }
 
+        }
+        setCopied(Array(names.length).fill(false))
         setIdentities(temp);
 
     }
 
-    const copytoClipboard = (x) => {
+    const copytoClipboard = (x, idx) => {
         navigator.clipboard.writeText(x)
 
+        setCopied(prev => {
+            let temp = [...prev]
+            temp[idx] = true;
+            return temp;
+        })
+
+        setTimeout(() => {
+            setCopied(prev => {
+                let temp = [...prev]
+                temp[idx] = false;
+                return temp;
+            })
+        }, 1500)
     }
 
     const handleShare = (x) => {
@@ -123,10 +135,6 @@ const Homepage = () => {
             console.error(error)
         }
     }
-
-
-
-
 
     const postreq = async (x, conf) => {
         const response = await fetch(`https://beta.jam.systems/_/pantry/api/v1/rooms/${x}`, {
@@ -159,7 +167,7 @@ const Homepage = () => {
 
                     <form onSubmit={(e) => handleSubmit(e)} className='flex flex-col justify-center items-center'>
                         <input type='submit' value='🌱 Create Room' className='select-none h-12 px-6 my-4 text-lg text-black bg-gray-200 
-                        rounded-lg focus:shadow-outline active:bg-gray-300 w-full' />
+                        rounded-lg focus:shadow-outline active:bg-gray-300 w-full hover:cursor-pointer' />
                         {names.map((x, idx) => {
                             if (idx === 0) {
                                 return (
@@ -172,17 +180,17 @@ const Homepage = () => {
 
                             return (
                                 <div className='flex py-2 border-2 px-2' key={idx}>
-                                    <input className='mx-2 px-1 border-solid border-2 rounded placeholder-gray-400 bg-gray-50 w-48' type='text' value={x}
+                                    <input className='mx-2 px-1 border-solid border-2 rounded placeholder-gray-400 bg-gray-50 w-48 ' type='text' value={x}
                                         onChange={(e) => handleChange(e, idx)} required maxLength={12} />
-                                    <div className='hover:cursor-pointer bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded '
+                                    <div className='hover:cursor-pointer bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 active:bg-red-700 hover:border-transparent rounded '
                                         onClick={(e) => { handleDelete(e, idx) }}>-</div>
                                 </div>
                             )
                         })}
                         <div className='my-1' />
-                        <div className='hover:cursor-pointer bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border
+                        <div className='hover:cursor-pointer bg-transparent hover:bg-green-500 text-green-700 font-semibold active:bg-green-700 hover:text-white py-2 px-4 border
                                          border-green-500 hover:border-transparent rounded w-3/5 text-center'
-                            onClick={() => addName()}>
+                            onClick={() => addName()} unselectable="on" >
                             add guest</div>
                     </form>
                 </div>
@@ -206,8 +214,12 @@ const Homepage = () => {
                                     </div>
 
                                     <div className='flex ml-auto mr-[25%] space-x-2'>
-                                        <ShareIcon className='h-5' onClick={() => { handleShare(seeds[idx]) }} />
-                                        <DocumentDuplicateIcon className='h-5' onClick={() => copytoClipboard(seeds[idx])} />
+                                        <ShareIcon className='h-6 hover:cursor-pointer hover:border-2 border-black active:bg-gray-400 rounded' onClick={() => { handleShare(seeds[idx]) }} />
+                                        {copied[idx] ?
+                                            <ClipboardCheckIcon className='h-6 hover:cursor-pointer hover:border-2 border-black active:bg-gray-400 rounded' onClick={() => navigator.clipboard.writeText(seeds[idx])} />
+                                            :
+                                        <ClipboardCopyIcon className='h-6 hover:cursor-pointer hover:border-2 border-black active:bg-gray-400 rounded' onClick={() => copytoClipboard(seeds[idx], idx)} />
+                                        }
                                     </div>
 
 

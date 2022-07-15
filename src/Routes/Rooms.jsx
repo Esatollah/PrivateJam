@@ -43,7 +43,7 @@ const Room = () => {
                     <input className='mx-2 px-1 border-solid border-2 rounded placeholder-gray-400 bg-gray-50 w-48 py-2 mb-2' type='text' value={password}
                         onChange={(e) => setPassword(e.target.value)} required />
                     <input type='submit' value='🌱 Join Room' className='select-none h-12 px-6 text-lg text-black
-                bg-gray-200 rounded-lg focus:shadow-outline active:bg-gray-300' onClick={() => handleSubmit()} />
+                bg-gray-200 rounded-lg focus:shadow-outline active:bg-gray-300 hover:cursor-pointer' onClick={() => handleSubmit()} />
                     <div className="my-4"></div>
 
 
