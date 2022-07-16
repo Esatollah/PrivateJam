@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import jamjpg from '../img/jam.jpg'
-import { PencilAltIcon } from '@heroicons/react/outline'
 
 const Room = () => {
     const { rid } = useParams();
@@ -9,9 +8,11 @@ const Room = () => {
     const [password, setPassword] = useState('');
     const [jamHash, setJamHash] = useState('');
 
+    let nav = useNavigate();
 
 
     const handleSubmit = (e) => {
+
         e.preventDefault();
 
         const jamConfig = {
@@ -25,8 +26,11 @@ const Room = () => {
         };
 
         setJamHash(window.btoa(JSON.stringify(jamConfig)));
-
         setSubmitted(true)
+    }
+
+    const handleNavigate  = () => {
+        nav("/")
     }
 
 
@@ -40,18 +44,18 @@ const Room = () => {
                         <h1 className='text-xl  text-black font-semibold py-4'>
                             Enter Password for Room "{rid}"
                         </h1>
-                        <img src={jamjpg} className="md:inline ml-auto w-14 h-auto"
+                        <img src={jamjpg} className="md:inline ml-auto w-14 h-auto hover:cursor-pointer" onClick={() => handleNavigate()}
                             alt='Jam mascot by @eejitlikeme' title='Jam mascot by @eejitlikeme' />
                     </div>
-                        <div className='flex items-center justify-center'>
+                    <div className='flex items-center justify-center'>
 
-                    <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col">
+                        <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col">
                             <input className='mx-2 px-1 border-solid border-2 rounded placeholder-gray-400 bg-gray-50 w-48 py-2 mb-2' type='text' value={password}
                                 onChange={(e) => setPassword(e.target.value)} required />
-                        <input type='submit' value='🌱 Join Room' className='select-none h-12 px-6 text-lg text-black
+                            <input type='submit' value='🌱 Join Room' className='select-none h-12 px-6 text-lg text-black
                 bg-gray-200 rounded-lg focus:shadow-outline active:bg-gray-300 hover:cursor-pointer'  />
-                    </form>
-                        </div>
+                        </form>
+                    </div>
                 </div>
 
                 <div className={submitted ? "flex flex-col justify-center items-center my-4 w-full" : "hidden"}>
@@ -59,7 +63,8 @@ const Room = () => {
                         submitted ? <iframe height={window.screen.width < 768 ? '800' : '500'} width="80%"
                             allow="microphone;*" title="Jam" src={`https://beta.jam.systems/${rid}?debug=true#${jamHash}`} /> : null
                     }
-                    <div className='text-center w-14 mt-4 mb-1 hover:cursor-pointer bg-transparent hover:bg-red-500 text-red-700 text-sm font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded '
+                    <div className='text-center w-14 mt-4 mb-1 hover:cursor-pointer bg-transparent hover:bg-red-500 text-red-700 text-sm font-semibold
+                     hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded '
 
                         onClick={() => { setSubmitted(false) }}>↻</div>
                 </div>

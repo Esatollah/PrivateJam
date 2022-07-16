@@ -26,15 +26,11 @@ const Homepage = () => {
         if (didMount) {
             const roomID = Math.random().toString(36).slice(-8);
             let confIdentities = identities.map(x => x.publicKey);
-            console.log(identities)
-            console.log(confIdentities)
-
 
             let namesConf = {}
             confIdentities.forEach((pbkey, idx) => {
                 namesConf[pbkey] = names[idx]
             });
-            console.log(namesConf)
 
             let conf = {
                 name: 'Jam',
@@ -209,11 +205,11 @@ const Homepage = () => {
                     <h1 className='text-2xl font-bold mt-0 mb-2 font-mono text-[#58544e] '>Guest List</h1>
                     <div className='flex flex-col justify-center bg-[#faf5ef] brightness-95 text-center pt-2 pb-4 px-4 rounded'>
                         <h3 className='text-xl text-[#faf5ef] brightness-[0.45]'>Room Link:</h3>
-                        <div className='my-1'/>
+                        <div className='my-1' />
                         <a href={roomlink ? roomlink : "/"} target="_blank" rel="noreferrer" className='border-b-2'>{roomlink}</a>
                     </div>
 
-                    <div className='my-2'/>
+                    <div className='my-2' />
 
                     <div className='w-full flex-col justify-center justify-items-center items-center' >
                         {identities && identities.map((x, idx) => {
