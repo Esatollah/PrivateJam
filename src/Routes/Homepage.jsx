@@ -204,11 +204,11 @@ const Homepage = () => {
                 </div>
 
                 <div className={didMount ?
-                    'flex flex-col items-center align-middle bg-[#faf5ef] py-2 w-4/5 rounded-2xl'
+                    'flex flex-col items-center align-middle bg-[#faf5ef] py-2 w-4/5 rounded-2xl border-4 border-[#c0bab3]'
                     : 'hidden'}>
-                    <h1 className='text-2xl font-bold mt-0 mb-2'>Guest List</h1>
+                    <h1 className='text-2xl font-bold mt-0 mb-2 font-mono text-[#58544e] '>Guest List</h1>
                     <div className='flex flex-col justify-center bg-[#faf5ef] brightness-95 text-center pt-2 pb-4 px-4 rounded'>
-                        <h3 className='text-xl'>Room Link:</h3>
+                        <h3 className='text-xl text-[#faf5ef] brightness-[0.45]'>Room Link:</h3>
                         <div className='my-1'/>
                         <a href={roomlink ? roomlink : "/"} target="_blank" rel="noreferrer" className='border-b-2'>{roomlink}</a>
                     </div>
@@ -219,24 +219,24 @@ const Homepage = () => {
                         {identities && identities.map((x, idx) => {
                             return (
                                 <div className='flex justify-self-center items-center ml-[25%]' key={idx}>
-                                    <div className='text-center border-2 border-spacing-1 my-1 self-center p-2' >
-                                        {x.info.name} <br />
-                                        {seeds[idx]}
+                                    <div className='text-center border-2 border-spacing-1 border-[#d5cfc8] my-1 self-center p-2' >
+                                        <span className='font-bold text-[#58544e]'>{x.info.name}</span> <br />
+                                        <span className='text-[#58544f]'>{seeds[idx]}</span>
                                     </div>
 
                                     <div className='flex ml-auto mr-[25%] space-x-2'>
                                         {shareable ?
-                                            <ShareIcon className='h-6 hover:cursor-pointer hover:border-2 border-black active:bg-gray-400 rounded'
+                                            <ShareIcon className='h-6 hover:cursor-pointer hover:border-2 border-black active:bg-gray-400 rounded text-[#58544e]'
                                                 onClick={() => { handleShare(seeds[idx]) }} />
                                             :
                                             null
                                         }
 
                                         {copied[idx] ?
-                                            <ClipboardCheckIcon className='h-6 hover:cursor-pointer hover:border-2 border-black active:bg-gray-400 rounded'
+                                            <ClipboardCheckIcon className='h-6 hover:cursor-pointer hover:border-2 border-black active:bg-gray-400 rounded text-[#58544e]'
                                                 onClick={() => navigator.clipboard.writeText(seeds[idx])} />
                                             :
-                                            <ClipboardCopyIcon className='h-6 hover:cursor-pointer hover:border-2 border-black active:bg-gray-400 rounded'
+                                            <ClipboardCopyIcon className='h-6 hover:cursor-pointer hover:border-2 border-black active:bg-gray-400 rounded text-[#58544e]'
                                                 onClick={() => copytoClipboard(seeds[idx], idx)} />
                                         }
                                     </div>
